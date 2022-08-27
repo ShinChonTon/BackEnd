@@ -8,13 +8,9 @@ from django.db.models.signals import post_save
 # Create your models here.
 
 class Location(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    si = models.CharField(max_length=10, default='')
-    gu = models.CharField(max_length=10, default='')
-    dong = models.CharField(max_length=10, default='')
-    detail_loc = models.TextField()
-    latitude = models.TextField()
-    longitude = models.TextField()
+    address = models.TextField(max_length=100)
+    latitude = models.TextField(max_length=100)
+    longitude = models.TextField(max_length=100)
 
 class User(AbstractUser):
     id = models.CharField(max_length=15, unique=True, default='', primary_key=True)
@@ -24,19 +20,7 @@ class User(AbstractUser):
         return self.username
 
 
-class Location(models.Model):
-    location1 = models.CharField(max_length=100)
-    location2 = models.CharField(max_length=100)
-    location3 = models.CharField(max_length=100)
-    location4 = models.CharField(max_length=100)
-    location5 = models.CharField(max_length=100)
-    location6 = models.CharField(max_length=100)
-    
-    # @receiver(post_save, sender=Meeting)
-    # def create_festival_optioncount(sender, instance, created, **kwargs):
-    #     if created:
-    #           Location.objects.create(meeting=instance)    
-    
+
 
 class Meeting(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='meeting_author')

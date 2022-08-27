@@ -7,7 +7,7 @@ from rest_framework.response import Response
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'nickname', 'password', 'birth']
+        fields = ['id', 'nickname','password', 'birth']
 
     def create(self, validated_data):
         user = User.objects.create(

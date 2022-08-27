@@ -15,10 +15,8 @@ class SignUpView(APIView):
     def post(self, request):
         # serializer=UserSerializer(id=request.data['id'],nickname=request.data['nickname'],birth=request.data['birth'], )
         serializer=UserSerializer(data=request.data)
-        print(serializer)
         if serializer.is_valid():
             serializer.save()
-            print('aaaaaaaa')
             return Response({'message':'회원가입 성공', 'data':serializer.data})
         return Response({'message':'회원가입 실패', 'error':serializer.errors})
 
@@ -44,20 +42,20 @@ class  MeetingsAPI(APIView):  # 미팅 전체
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request): # request에 카테고리도 포함하여 포스트    # 넘겨줘야하는 값(user_id, name, body, address, max_people, plan_date , thema, age)
-        author=get_object_or_404(User,id=request.data.user_id)
-        if Location.objects.filter(address=request.data.address).exists():
-            location=get_object_or_404(Location,address=request.data.address)
+        author=get_object_or_404(User,id=request.data['user_id'])
+        if Location.objects.filter(address=request.data['address']).exists():
+            location=get_object_or_404(Location,address=request.data['address'])
         else :
             url = 'https://dapi.kakao.com/v2/local/search/keyword.json'
-            params = {'query': request.data.address, 'analyze_type':'exact'}
+            params = {'query': request.data['address'], 'analyze_type':'exact'}
             headers = {"Authorization": "KakaoAK bcc331e79192b044188e99f15b75dd78"}
             x = requests.get(url, params=params, headers=headers).json()['documents'][0]['x']
             y = requests.get(url, params=params, headers=headers).json()['documents'][0]['y']
-            location_serializer = LocationSerializer(address=request.data.address, latitude = x, longitude = y)
+            location_serializer = LocationSerializer(address=request.data['address'], latitude = x, longitude = y)
             location_serializer.save()
-            location=get_object_or_404(Location,address=request.data.address)
+            location=get_object_or_404(Location,address=request.data['address'])
             
-        serializer = MeetingSerializer(author=author,location= location,participant=author,name= request.data.name ,body=request.data.body,max_people=request.data.max_people,plan_date=request.data.plan_date,thema=request.data.thema,age=request.data.age)
+        serializer = MeetingSerializer(author=author,location= location,participant=author,name= request.data['name'] ,body=request.data['body'],max_people=request.data['max_people'],plan_date=request.data['plan_date'],thema=request.data['thema'],age=request.data['age'])
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

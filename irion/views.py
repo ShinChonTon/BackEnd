@@ -13,9 +13,12 @@ from .models import Meeting, User, Location
 
 class SignUpView(APIView):
     def post(self, request):
+        # serializer=UserSerializer(id=request.data['id'],nickname=request.data['nickname'],birth=request.data['birth'], )
         serializer=UserSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
+            print('aaaaaaaa')
             return Response({'message':'회원가입 성공', 'data':serializer.data})
         return Response({'message':'회원가입 실패', 'error':serializer.errors})
 
